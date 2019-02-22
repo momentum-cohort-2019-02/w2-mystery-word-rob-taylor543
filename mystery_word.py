@@ -66,26 +66,41 @@ def update_progress(mystery_word, progress, current_letter):
     return progress
 
 
+def get_play_again():
+    """Asks if user wants to play again.  Makes sure input is valid and passes true or false if user wants to play again"""
+    play_again_choices = "yYnN"
+    play_again = input("Do you want to play again? (Y/N): ")
+    while play_again not in play_again_choices:
+        print("Not a valid choice.")
+        play_again = input("Do you want to play again? (Y/N): ")
+    if play_again == "y" or play_again == "Y":
+        return True
+    else:
+        return False
+
+
 if __name__ == "__main__":
 
-    difficulty = get_difficulty()
-    words = get_word_list(difficulty)
-    mystery_word = words[randint(0,len(words)-1)]
-    word_progress = ["_" for e in mystery_word]
-    guesses_left = 8
-    guessed = []
-    progress = [word_progress, guesses_left, guessed]
-    win = False
-    while progress[1] and not win:
+    still_wants_to_play = True
+    while still_wants_to_play:
+        difficulty = get_difficulty()
+        words = get_word_list(difficulty)
+        mystery_word = words[randint(0,len(words)-1)]
+        word_progress = ["_" for e in mystery_word]
+        guesses_left = 8
+        guessed = []
+        progress = [word_progress, guesses_left, guessed]
+        win = False
+        while progress[1] and not win:
+            show_progress(progress)
+            current_letter = get_letter(progress)
+            progress = update_progress(mystery_word, progress, current_letter)
+            if "_" not in progress[0]:
+                win = True
+
         show_progress(progress)
-        current_letter = get_letter(progress)
-        progress = update_progress(mystery_word, progress, current_letter)
-        if "_" not in progress[0]:
-            win = True
-
-    show_progress(progress)
-    if win:
-        print("You won!")
-    else:
-        print(f"The word was {mystery_word}.  Better luck next time :P")
-
+        if win:
+            print("You won!")
+        else:
+            print(f"The word was {mystery_word}.  Better luck next time :P")
+        still_wants_to_play = get_play_again()

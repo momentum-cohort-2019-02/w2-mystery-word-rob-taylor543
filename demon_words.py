@@ -29,24 +29,27 @@ def narrow_word_bank(words, current_letter):
 
 if __name__ == "__main__":
 
-    difficulty = get_difficulty()
-    words = get_word_list(difficulty)
-    demon_words = get_demon_words(words)
-    word_progress = ["_" for e in demon_words[0]]
-    guesses_left = 20
-    guessed = []
-    progress = [word_progress, guesses_left, guessed]
-    win = False
-    while progress[1] and not win:
-        show_progress(progress)
-        current_letter = get_letter(progress)
-        demon_words = narrow_word_bank(demon_words, current_letter)
-        progress = update_progress(demon_words[0], progress, current_letter)
-        if "_" not in progress[0]:
-            win = True
+    still_wants_to_play = True
+    while still_wants_to_play:
+        difficulty = get_difficulty()
+        words = get_word_list(difficulty)
+        demon_words = get_demon_words(words)
+        word_progress = ["_" for e in demon_words[0]]
+        guesses_left = 20
+        guessed = []
+        progress = [word_progress, guesses_left, guessed]
+        win = False
+        while progress[1] and not win:
+            show_progress(progress)
+            current_letter = get_letter(progress)
+            demon_words = narrow_word_bank(demon_words, current_letter)
+            progress = update_progress(demon_words[0], progress, current_letter)
+            if "_" not in progress[0]:
+                win = True
 
-    show_progress(progress)
-    if win:
-        print("You won!")
-    else:
-        print(f"The word was {mystery_word}.  Better luck next time :P")
+        show_progress(progress)
+        if win:
+            print("You won!")
+        else:
+            print(f"The word was {mystery_word}.  Better luck next time :P")
+        still_wants_to_play = get_play_again()
