@@ -51,5 +51,5 @@ if __name__ == "__main__":
         if win:
             print("You won!")
         else:
-            print(f"The word was {mystery_word}.  Better luck next time :P")
+            print(f"The word was {demon_words}.  Better luck next time :P")
         still_wants_to_play = get_play_again()
