@@ -33,9 +33,9 @@ def get_difficulty():
 
 def show_progress(progress):
     """Prints how many guesses you have left and then the current word progress with blanks where you have not guessed it yet"""
-    print(f"\nYou have {progress[2]} guesses left.")
+    print(f"\nYou have {progress[1]} guesses left.")
     word_progress = ""
-    for char in progress[1]:
+    for char in progress[0]:
         word_progress += char.upper() + " "
     print(word_progress + "\n")
 
@@ -47,46 +47,45 @@ def get_letter(progress):
         letter_choice = input("Letter choice: ").casefold()
         if not letter_choice.isalpha():
             print("Please only choose one letter with none of that symbol or number garbage.")
-        elif letter_choice in progress[1]:
+        elif letter_choice in progress[2]:
             print("You already guessed that letter!")
             letter_choice = ""
     return letter_choice
 
 
-def update_progress(progress, current_letter):
+def update_progress(mystery_word, progress, current_letter):
     """Accepts the current progress as a list and the letter guess, returns the updated progress as a list (subtracts from guesses)"""
     didnt_find_one = True
     for i in range(len(progress[0])):
-        if current_letter == progress[0][i]:
-            progress[1][i] = current_letter
+        if current_letter == mystery_word[i]:
+            progress[0][i] = current_letter
             didnt_find_one = False
     if didnt_find_one:
-        progress[2]-=1
+        progress[1]-=1
+    progress[2].append(current_letter)
     return progress
 
 
-def main():
+if __name__ == "__main__":
 
     difficulty = get_difficulty()
     words = get_word_list(difficulty)
     mystery_word = words[randint(0,len(words)-1)]
-    word_progress = []
-    for e in range(len(mystery_word)):
-        word_progress.append("_")
+    word_progress = ["_" for e in mystery_word]
     guesses_left = 8
-    progress = [mystery_word, word_progress, guesses_left]
+    guessed = []
+    progress = [word_progress, guesses_left, guessed]
     win = False
-    while progress[2] and not win:
+    while progress[1] and not win:
         show_progress(progress)
         current_letter = get_letter(progress)
-        progress = update_progress(progress, current_letter)
-        if "_" not in progress[1]:
+        progress = update_progress(mystery_word, progress, current_letter)
+        if "_" not in progress[0]:
             win = True
 
     show_progress(progress)
     if win:
         print("You won!")
     else:
-        print("The word was {mystery_word}.  Better luck next time :P")
+        print(f"The word was {mystery_word}.  Better luck next time :P")
 
-main()
